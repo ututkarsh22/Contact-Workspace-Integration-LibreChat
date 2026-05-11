@@ -135,7 +135,8 @@ DOMAIN_SERVER=http://localhost:3080
 ```
 
 ```bash
-# 4. Run backend
+# 4. npm i multer csv-parser
+Run backend
 npm run backend
 
 # 5. Run frontend (separate terminal)
