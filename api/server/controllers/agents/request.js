@@ -13,6 +13,7 @@ const { disposeClient, clientRegistry, requestDataMap } = require('~/server/clea
 const { handleAbortError } = require('~/server/middleware');
 const { logViolation } = require('~/cache');
 const { saveMessage, getConvo } = require('~/models');
+const { searchRelevantContacts, formatContactsForPrompt } = require('~/server/services/contactSearch');
 
 function createCloseHandler(abortController) {
   return function (manual) {
@@ -289,7 +290,26 @@ const ResumableAgentController = async (req, res, next, initializeClient, addTit
           },
         };
 
-        const response = await client.sendMessage(text, messageOptions);
+        // Search contacts and inject into agent instructions if relevant
+let enrichedText = text;
+try {
+  const contacts = await searchRelevantContacts(text);
+  if (contacts.length > 0) {
+     const contactContext = formatContactsForPrompt(contacts);
+
+     if (client && client.options && client.options.agent) {
+       const agent = client.options.agent;
+       agent.additional_instructions = (agent.additional_instructions || '') + '\n' + contactContext;
+       logger.debug('[AgentController] Injected contact context into agent.additional_instructions');
+     } else {
+       messageOptions.systemMessage = (messageOptions.systemMessage || ' ') + contactContext;
+     }
+  }
+} catch (err) {
+  logger.warn('[AgentController] Contact search failed, proceeding without contacts', err);
+}
+
+const response = await client.sendMessage(text, messageOptions);
 
         const messageId = response.messageId;
         const endpoint = endpointOption.endpoint;
