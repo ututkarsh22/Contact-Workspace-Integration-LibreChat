@@ -8,6 +8,16 @@ I spent most of my time on the AI integration part — how do you make an LLM aw
 
 ---
 
+## Notes
+
+- The core Contacts integration, CSV importing, retrieval flow, and AI chat integration are fully functional in my local environment.
+
+- Some GitHub Actions workflows inherited from the original LibreChat repository may fail in this fork because deployment-related secrets and infrastructure are not configured for this repository.
+
+- The project was tested locally using MongoDB and Gemini API integration.
+
+---
+
 ## What I Built
 
 ### 1. Contact Model
@@ -18,7 +28,6 @@ I also added `metadataText` — a flat string of all metadata joined together, p
 ### 2. CSV Import
 Bulk import using multer for file upload and csv-parser for parsing. Uses `insertMany` for a single DB operation instead of inserting one by one. Since `insertMany` skips Mongoose middleware, I generate `metadataText` manually inside the CSV parsing loop.
 
-NOTE - CSV import works in my primary environment but may require upload path setup depending on local configuration.
 
 ### 3. Contacts UI
 Sidebar panel in the LibreChat nav. Features:
