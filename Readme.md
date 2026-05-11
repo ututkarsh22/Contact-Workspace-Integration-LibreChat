@@ -103,20 +103,22 @@ client/
 ```bash
 # 1. Clone the repo
 git clone <your-repo-url>
-cd LibreChat
+cd FolderName of cloned one
 
 # 2. Install dependencies
-npm install
-cd client && npm install && cd ..
+npm ci
 
 # 3. Set up environment
 cp .env.example .env
+
+
 ```
 
 Edit `.env`:
 ```
 MONGO_URI=mongodb://127.0.0.1:27017/LibreChat
 GOOGLE_KEY=your_google_api_key_here
+GEMINI_API_KEY=same_key_as_above
 DOMAIN_CLIENT=http://localhost:3091
 DOMAIN_SERVER=http://localhost:3080
 ```
@@ -130,6 +132,14 @@ npm run frontend
 ```
 
 Open `http://localhost:3091`
+
+```
+for development local machine you can also run
+npm run frontend:dev
+npm run backend:dev
+
+(both on seperate)
+```
 
 ### Importing Contacts
 
@@ -182,3 +192,4 @@ Current keyword matching works for direct queries but misses semantic ones. Bett
 ## Architecture Summary
 
 The AI integration is a single hook in `ResumableAgentController`. All search and formatting logic is isolated in `contactSearch.js` so the retrieval strategy can be swapped later without touching the controller.
+I taken help of AI to make my readme file.
