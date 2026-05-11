@@ -18,6 +18,8 @@ I also added `metadataText` — a flat string of all metadata joined together, p
 ### 2. CSV Import
 Bulk import using multer for file upload and csv-parser for parsing. Uses `insertMany` for a single DB operation instead of inserting one by one. Since `insertMany` skips Mongoose middleware, I generate `metadataText` manually inside the CSV parsing loop.
 
+NOTE - CSV import works in my primary environment but may require upload path setup depending on local configuration.
+
 ### 3. Contacts UI
 Sidebar panel in the LibreChat nav. Features:
 - View all contacts
