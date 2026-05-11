@@ -1,10 +1,7 @@
 const Contact = require('~/models/Contact.model');
 
-/**
- * Extract keywords from user message
- */
+
 function extractKeywords(text) {
-  // Remove common words, keep meaningful ones
   const stopWords = new Set([
     'who','what','where','when','why','how','is','are','was','were',
     'the','a','an','in','at','for','me','our','all','about','tell','list',
@@ -22,8 +19,8 @@ function extractKeywords(text) {
   const keywords = [];
   const seen = new Set();
   for (const token of tokens) {
-    if (token.length < 3) continue; // skip very short tokens
-    if (/^\d+$/.test(token)) continue; // skip numeric-only tokens
+    if (token.length < 3) continue; 
+    if (/^\d+$/.test(token)) continue; 
     if (stopWords.has(token)) continue;
     if (seen.has(token)) continue;
     seen.add(token);
@@ -41,10 +38,9 @@ async function searchRelevantContacts(text) {
   const keywords = extractKeywords(text);
   if (keywords.length === 0) return [];
 
-  // Escape regex characters to avoid injection and unexpected patterns
+  
   const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-  // Match all keywords somewhere (AND), but allow each keyword to match any of the fields (OR)
   const searchConditions = keywords.map(keyword => {
     const safe = escapeRegex(keyword);
     return {
@@ -59,7 +55,8 @@ async function searchRelevantContacts(text) {
     };
   });
 
-  const query = { $or: searchConditions };
+  const query = { $and: searchConditions };
+  console.log("Query hai ye ",query);
 
   const contacts = await Contact.find(query)
     .limit(40)
